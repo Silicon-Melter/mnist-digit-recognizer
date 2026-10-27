@@ -163,7 +163,8 @@ def main():
     )
 
     @st.cache_resource
-    def load_artifacts():
+    def load_artifacts(file_stamp):
+        # file_stamp (size, mtime) is only a cache key: a new model file invalidates the cached one.
         import tensorflow as tf
 
         model = tf.keras.models.load_model(MODEL_PATH)
@@ -180,7 +181,10 @@ def main():
     )
 
     # Check outside the cache so a model exported later is picked up on refresh.
-    artifacts = load_artifacts() if MODEL_PATH.exists() and PREPROCESS_PATH.exists() else None
+    artifacts = None
+    if MODEL_PATH.exists() and PREPROCESS_PATH.exists():
+        stat = MODEL_PATH.stat()
+        artifacts = load_artifacts((stat.st_size, stat.st_mtime))
     if artifacts is None:
         st.markdown(
             """
