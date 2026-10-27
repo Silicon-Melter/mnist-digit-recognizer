@@ -1,0 +1,8 @@
+# Same versions as the local conda env (mnist-sub10); TF CPU build is enough for inference.
+streamlit==1.60.0
+streamlit-drawable-canvas==0.13.0
+tensorflow-cpu==2.17.1
+numpy==1.26.4
+pandas==3.0.6
+pillow==12.3.0
+scipy==1.17.1
