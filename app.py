@@ -49,7 +49,8 @@ def preprocess_canvas(rgba, mean, std):
     return x.reshape(1, 28, 28, 1).astype(np.float32), preview
 
 
-BRUSH_SIZE = 18
+BRUSH_SIZE = 27  # scaled with the 420 px canvas so strokes match MNIST thickness after resizing
+CANVAS_SIZE = 420
 ACCENT, ACCENT_SOFT, INK = "#8b5cf6", "#ddd6fe", "#31204f"
 
 
@@ -126,7 +127,7 @@ def main():
         .block-container { max-width: 900px; padding-top: 3rem; padding-bottom: 3rem; }
         h1 { color: #31204f !important; font-size: 3.25rem !important; font-weight: 800 !important; }
         h2, h3 { color: #31204f !important; }
-        .tagline { color: #334155 !important; font-size: 1.2rem; margin-top: 0.35rem; }
+        .tagline { color: #334155 !important; font-size: 1.2rem; margin-top: 0.35rem; margin-bottom: 2.2rem; }
         [data-testid="stAlert"] p, [data-testid="stAlert"] div { color: #172554 !important; }
         [data-testid="stCaptionContainer"] p { color: #172554 !important; }
         .setup-card, .result-card, .chart-card, .stage-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 18px; padding: 1.25rem 1.5rem; box-shadow: 0 8px 24px rgba(49, 32, 79, 0.08); }
@@ -137,7 +138,10 @@ def main():
         .result-digit.empty { color: #cbd5e1; }
         .result-conf { font-size: 1.2rem; color: #334155; }
         .chart-title, .stage-title { color: #31204f; font-weight: 700; font-size: 0.95rem; margin-bottom: 0.6rem; }
-        .bars { display: flex; align-items: flex-end; gap: 6px; height: 170px; }
+        .bars { display: flex; align-items: flex-end; gap: 6px; height: 150px; }
+        [class*="st-key-canvas_"] { width: 100% !important; display: flex; justify-content: center; }
+        [class*="st-key-canvas_"] .stBidiComponent { width: 420px !important; margin: 0 auto; }
+        .st-key-clear_btn { max-width: 420px; margin: 0 auto; }
         .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; }
         .bar-val { font-size: 0.7rem; color: #6d28d9; height: 1rem; }
         .bar-track { flex: 1; width: 100%; display: flex; align-items: flex-end; background: #f5f3ff; border-radius: 8px; }
@@ -210,13 +214,13 @@ def main():
             stroke_width=BRUSH_SIZE,
             stroke_color="#FFFFFF",
             background_color="#000000",
-            width=280,
-            height=280,
+            width=CANVAS_SIZE,
+            height=CANVAS_SIZE,
             drawing_mode="freedraw",
             return_image_data=True,
             key=f"canvas_{st.session_state.canvas_id}",
         )
-        if st.button("🗑️  Clear canvas", use_container_width=True):
+        if st.button("🗑️  Clear canvas", key="clear_btn", use_container_width=True):
             st.session_state.canvas_id += 1
             st.rerun()
         st.caption("Draw one digit (0–9), as large as the box.")
